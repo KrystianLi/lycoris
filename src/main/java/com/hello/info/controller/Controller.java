@@ -8,12 +8,16 @@ import com.hello.PurposeEnum;
 import com.hello.factory.ExpFactory;
 import com.hello.info.model.CompanyTableModel;
 import com.hello.strategy.ExpStrategy;
+import com.hello.tools.ExportExcel;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+
+import java.util.LinkedHashMap;
+import java.util.List;
 
 public class Controller {
 
@@ -138,5 +142,23 @@ public class Controller {
 
     public TableView<CompanyTableModel> getCompanyTable() {
         return companyTable;
+    }
+
+    public void companyNameSave(ActionEvent event) {
+        String sheetName = "信息导出";
+        List<CompanyTableModel> companyTableModelList = getCompanyTable().getItems();
+        LinkedHashMap<String, String> titleMap = new LinkedHashMap<String, String>();
+        titleMap.put("id","id");
+        titleMap.put("name","公司名");
+        titleMap.put("date","成立日期");
+        titleMap.put("email","邮箱");
+        titleMap.put("shareholder","股东信息");
+        titleMap.put("active","活跃状态");
+        ExportExcel.excelExport(companyTableModelList, titleMap, sheetName);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("提示");
+        alert.setHeaderText(null);
+        alert.setContentText("导出完成");
+        alert.showAndWait();
     }
 }
