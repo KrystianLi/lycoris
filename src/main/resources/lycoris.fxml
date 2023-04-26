@@ -23,7 +23,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="851.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
+<AnchorPane maxHeight="-Infinity" stylesheets="@modena-highContrast-blackOnWhite.css" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="851.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
 
    <children>
 
@@ -82,6 +82,11 @@
       <Tab text="蓝凌OA" fx:id="landray">
          <content>
             <fx:include fx:id="landrayxml" source="landray.fxml"/>
+         </content>
+      </Tab>
+      <Tab text="综合工具" fx:id="utilman">
+         <content>
+            <fx:include fx:id="utilmanxml" source="utilman.fxml"/>
          </content>
       </Tab>
 
