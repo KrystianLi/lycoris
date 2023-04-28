@@ -1,0 +1,15 @@
+.flat-button {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-text-fill: #000000;
+}
+
+.flat-button:focused {
+    -fx-background-radius: 0;
+    -fx-background-insets: 0;
+    -fx-background-color: white;
+    -fx-border-color: transparent;
+    -fx-underline: true;
+}

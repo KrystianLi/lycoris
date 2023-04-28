@@ -20,7 +20,7 @@ public class Main extends Application {
         try {
             Pane root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("lycoris.fxml")));
             primaryStage.setScene(new Scene(root));
-            primaryStage.setResizable(false);
+//            primaryStage.setResizable(false);
             primaryStage.setOnCloseRequest(event -> {
                 System.exit(0);
             });
