@@ -1,4 +1,7 @@
+import com.hello.info.controller.Controller;
 import com.hello.tools.DateUtil;
+import com.hello.tools.MyExecutor;
+import javafx.application.Platform;
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
@@ -6,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.*;
 
 public class testInfo {
     @Test
@@ -24,5 +28,45 @@ public class testInfo {
         }
         String s = DateUtil.descDate(listDate1).get(0);
         System.out.println(s);
+    }
+
+    public void testFor(){
+        int i =0;
+        while (true){
+            System.out.println(i++);
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    @Test
+    public void testTh() throws InterruptedException {
+//        ExecutorService executor = Executors.newFixedThreadPool(10);
+        ThreadPoolExecutor executor = MyExecutor.getExecutor();
+        CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+            // 执行一些耗时的操作
+            testFor();
+        }, executor);
+        future.thenRunAsync(() -> {
+            // 任务执行完成后更新进度
+            System.out.println("任务完成");
+        });
+        Thread.sleep(5000);
+        System.out.println("开始暂停");
+//        future.cancel(true); // 取消CompletableFuture
+//        executor.shutdown(); // 关闭线程池
+//        try {
+//            executor.awaitTermination(5, TimeUnit.SECONDS); // 等待线程池中的任务完成
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+        executor.shutdownNow(); // 立即关闭线程池
+        System.out.println("暂停结束");
+        while (true){
+
+        }
     }
 }

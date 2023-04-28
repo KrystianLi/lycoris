@@ -57,6 +57,11 @@
                                            <Insets right="10.0" />
                                        </HBox.margin>
                                    </Button>
+                                    <Button fx:id="companyNameStopBtn" mnemonicParsing="false" onAction="#companyNameStop" text="停止" >
+                                        <HBox.margin>
+                                            <Insets right="10.0" />
+                                        </HBox.margin>
+                                    </Button>
                                    <Button fx:id="companyNameSaveBtn" mnemonicParsing="false" onAction="#companyNameSave" text="保存" >
                                        <HBox.margin>
                                            <Insets />
@@ -149,12 +154,13 @@
                                   <children>
                                       <TableView fx:id="beianTable">
                                           <columns>
-                                              <TableColumn text="序号" />
-                                              <TableColumn prefWidth="219.0" text="网站备案/许可证号" />
-                                              <TableColumn minWidth="0.0" prefWidth="149.0" text="主办单位名称" />
-                                              <TableColumn prefWidth="101.0" text="网站名称" />
-                                              <TableColumn prefWidth="168.0" text="网站域名" />
-                                              <TableColumn prefWidth="94.0" text="审核时间" />
+                                              <TableColumn fx:id="beianId" text="序号" />
+                                              <TableColumn fx:id="beianNo" prefWidth="219.0" text="网站备案/许可证号" />
+                                              <TableColumn fx:id="beianCompanyName" minWidth="0.0" prefWidth="149.0" text="主办单位名称" />
+                                              <TableColumn fx:id="beianSiteName" prefWidth="101.0" text="网站名称" />
+                                              <TableColumn fx:id="beianSiteDomain" prefWidth="168.0" text="网站域名" />
+                                              <TableColumn fx:id="beianDate" prefWidth="94.0" text="审核时间" />
+                                              <TableColumn fx:id="beianUrl" prefWidth="94.0" text="URL" />
                                           </columns>
                                       </TableView>
                                   </children>

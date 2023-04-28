@@ -6,6 +6,7 @@ package com.hello.info.controller;
 
 import com.hello.PurposeEnum;
 import com.hello.factory.ExpFactory;
+import com.hello.info.model.CompanyBeianTableModel;
 import com.hello.info.model.CompanyTableModel;
 import com.hello.strategy.ExpStrategy;
 import com.hello.tools.ExportExcel;
@@ -34,6 +35,8 @@ public class Controller {
 
     @FXML
     private Button companyNameSearchBtn;
+    @FXML
+    private Button companyNameStopBtn;
 
     @FXML
     private TableView<CompanyTableModel> companyTable;
@@ -52,8 +55,7 @@ public class Controller {
     @FXML
     private Button companyBeianSearchBtn;
 
-    @FXML
-    private TableView<String> beianTable;
+
 
     @FXML
     public TextArea logbeianArea;
@@ -81,6 +83,26 @@ public class Controller {
 
     private ObservableList<CompanyTableModel> companyTableModels = FXCollections.observableArrayList();
 
+    private ExpStrategy InfoName;
+
+    @FXML
+    private TableView<CompanyBeianTableModel> beianTable;
+    //备案号列名
+    @FXML
+    private TableColumn<CompanyBeianTableModel, String> beianId;
+    @FXML
+    private TableColumn<CompanyBeianTableModel, String> beianNo;
+    @FXML
+    private TableColumn<CompanyBeianTableModel, String> beianCompanyName;
+    @FXML
+    private TableColumn<CompanyBeianTableModel, String> beianSiteName;
+    @FXML
+    private TableColumn<CompanyBeianTableModel, String> beianSiteDomain;
+    @FXML
+    private TableColumn<CompanyBeianTableModel, String> beianDate;
+    @FXML
+    private TableColumn<CompanyBeianTableModel, String> beianUrl;
+
     public void initialize(){
         //初始化公司查询数据获取源下拉框
         for (String s : PurposeEnum.getExpType(PurposeEnum.Info.getExpType())){
@@ -105,6 +127,14 @@ public class Controller {
         }
         searchBeianComboBox.getSelectionModel().selectFirst();
 
+        beianId.setCellValueFactory(cellData -> cellData.getValue().idProperty());
+        beianNo.setCellValueFactory(cellData -> cellData.getValue().b());
+        beianCompanyName.setCellValueFactory(cellData -> cellData.getValue().companyNameProperty());
+        beianSiteName.setCellValueFactory(cellData -> cellData.getValue().dateProperty());
+        beianSiteDomain.setCellValueFactory(cellData -> cellData.getValue().dateProperty());
+        beianDate.setCellValueFactory(cellData -> cellData.getValue().dateProperty());
+        beianUrl.setCellValueFactory(cellData -> cellData.getValue().dateProperty());
+
 
     }
     @FXML
@@ -125,9 +155,33 @@ public class Controller {
         String cve = this.searchCompanyNameComboBox.getValue().toString().trim();
         String keyWord = this.companyText.getText();
         String filterWord = this.filterText.getText();
-        ExpStrategy Info = ExpFactory.getFactApplyStrategy(cve);
+        InfoName = ExpFactory.getFactApplyStrategy(cve);
         try {
-            String s = Info.searchCompanyName(keyWord,filterWord);
+            String s = InfoName.searchCompanyName(keyWord,filterWord);
+        } catch (Exception e) {
+            for (StackTraceElement stackTraceElement : e.getStackTrace()) {
+                System.out.println(stackTraceElement.toString());
+            }
+        }
+    }
+
+    @FXML
+    void companyNameStop(ActionEvent event){
+        try {
+            Boolean aBoolean = InfoName.stopCompany();
+            if (aBoolean){
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("提示");
+                alert.setHeaderText(null);
+                alert.setContentText("停止成功");
+                alert.showAndWait();
+            }else {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("提示");
+                alert.setHeaderText("作者能力有限，等有缘人给我补充代码");
+                alert.setContentText("停止失败，请结束程序");
+                alert.showAndWait();
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -142,6 +196,10 @@ public class Controller {
 
     public TableView<CompanyTableModel> getCompanyTable() {
         return companyTable;
+    }
+
+    public TableView<String> getBeianTable() {
+        return beianTable;
     }
 
     public void companyNameSave(ActionEvent event) {

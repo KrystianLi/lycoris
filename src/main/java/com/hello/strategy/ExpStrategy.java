@@ -44,4 +44,5 @@ public abstract class ExpStrategy{
 
     public String searchCompanyName(String keyWord,String filterWorld){ throw new UnsupportedOperationException();}
     public String searchCompanyBeian(String keyWord,String filterWorld){ throw new UnsupportedOperationException();}
+    public Boolean stopCompany(){ throw new UnsupportedOperationException();}
 }
