@@ -88,6 +88,9 @@ public class CompanyBeianTableModel {
     public StringProperty companyNameProperty() {
         return new SimpleStringProperty(companyName);
     }
+    public StringProperty beianNoProperty() {
+        return new SimpleStringProperty(beianNo);
+    }
     public StringProperty beianUrlProperty() {
         return new SimpleStringProperty(beianUrl);
     }

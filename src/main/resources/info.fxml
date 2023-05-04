@@ -170,7 +170,7 @@
                               </VBox>
                               <VBox VBox.vgrow="ALWAYS">
                                   <children>
-                                      <TextArea fx:id="logbeianArea" VBox.vgrow="ALWAYS">
+                                      <TextArea fx:id="logCompanyBeianArea" VBox.vgrow="ALWAYS">
                                           <VBox.margin>
                                               <Insets />
                                           </VBox.margin>

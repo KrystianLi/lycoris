@@ -210,7 +210,7 @@ public class TianYanService extends ExpStrategy {
 
         future.thenRunAsync(() -> {
             // 任务执行完成后更新进度
-            Platform.runLater(() -> Controller.getInstance().logCompanyNameArea.appendText("[+]天眼查: 查询备案, 搜索完成\n"));
+            Platform.runLater(() -> Controller.getInstance().logCompanyBeianArea.appendText("[+]天眼查: 查询备案, 搜索完成\n"));
         });
         return "";
     }
@@ -227,21 +227,35 @@ public class TianYanService extends ExpStrategy {
             //解析查询总数
             String total = doc.select("span.beian-name").text();
             //解析总页数
-            int pageNum = Integer.parseInt(total) / PAGE_SIZE;
+            int pageNum = Integer.parseInt(total) / PAGE_SIZE + 1;
             List<CompanyBeianTableModel> tempList = parseCompanyBeian(doc);
             companyBeianList = Stream.concat(companyBeianList.stream(), tempList.stream())
                     .collect(Collectors.toList());
+            //更新数据表格
+            for (CompanyBeianTableModel companyBeianTableModel : tempList) {
+                Platform.runLater(() -> Controller.getInstance().getBeianTable().getItems().add(companyBeianTableModel));
+            }
             if (pageNum != 0){
-                for (int i = 1; i < pageNum; i++) {
-                    Document tempDoc = Jsoup.parse(new URL(BASE_BEIAN_URL+uri+"p"+i), 3000);
+                for (int i = 2; i < pageNum; i++) {
+                    String url = BASE_BEIAN_URL+uri+"/p"+i;
+                    Document tempDoc = Jsoup.parse(new URL(url), 3000);
+                    Platform.runLater(()->Controller.getInstance().logCompanyBeianArea.appendText("[+]天眼查: 正在访问: "+url+"\n"));
+                    if (tempDoc.select("div:containsOwn(登录后查看更多信息)").size() != 0){
+                        Platform.runLater(()->Controller.getInstance().logCompanyBeianArea.appendText("[+]天眼查: 登录后查看更多信息\n"));
+                        break;
+                    }
                     tempList = parseCompanyBeian(tempDoc);
+                    //更新数据表格
+                    for (CompanyBeianTableModel companyBeianTableModel : tempList) {
+                        Platform.runLater(() -> Controller.getInstance().getBeianTable().getItems().add(companyBeianTableModel));
+                    }
                     companyBeianList = Stream.concat(companyBeianList.stream(), tempList.stream())
                             .collect(Collectors.toList());
                 }
             }
             //获取实际总条数
             String tempNum = companyBeianList.get(companyBeianList.size()).getId();
-            Platform.runLater(()->Controller.getInstance().logCompanyNameArea.appendText("[+]天眼查: 共计查询到"+tempNum+"条\n"));
+            Platform.runLater(()->Controller.getInstance().logCompanyBeianArea.appendText("[+]天眼查: 共计查询到"+tempNum+"条\n"));
 
         }catch (Exception e){
             for (StackTraceElement stackTraceElement : e.getStackTrace()) {

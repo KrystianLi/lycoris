@@ -58,7 +58,7 @@ public class Controller {
 
 
     @FXML
-    public TextArea logbeianArea;
+    public TextArea logCompanyBeianArea;
 
     @FXML
     public TextArea logCompanyNameArea;
@@ -84,7 +84,7 @@ public class Controller {
     private ObservableList<CompanyTableModel> companyTableModels = FXCollections.observableArrayList();
 
     private ExpStrategy InfoName;
-
+    //备案查询表格
     @FXML
     private TableView<CompanyBeianTableModel> beianTable;
     //备案号列名
@@ -102,6 +102,7 @@ public class Controller {
     private TableColumn<CompanyBeianTableModel, String> beianDate;
     @FXML
     private TableColumn<CompanyBeianTableModel, String> beianUrl;
+    private ObservableList<CompanyBeianTableModel> companyBeianTableModels = FXCollections.observableArrayList();
 
     public void initialize(){
         //初始化公司查询数据获取源下拉框
@@ -128,13 +129,13 @@ public class Controller {
         searchBeianComboBox.getSelectionModel().selectFirst();
 
         beianId.setCellValueFactory(cellData -> cellData.getValue().idProperty());
-        beianNo.setCellValueFactory(cellData -> cellData.getValue().b());
+        beianNo.setCellValueFactory(cellData -> cellData.getValue().beianNoProperty());
         beianCompanyName.setCellValueFactory(cellData -> cellData.getValue().companyNameProperty());
-        beianSiteName.setCellValueFactory(cellData -> cellData.getValue().dateProperty());
-        beianSiteDomain.setCellValueFactory(cellData -> cellData.getValue().dateProperty());
+        beianSiteName.setCellValueFactory(cellData -> cellData.getValue().siteNameProperty());
+        beianSiteDomain.setCellValueFactory(cellData -> cellData.getValue().siteDomainProperty());
         beianDate.setCellValueFactory(cellData -> cellData.getValue().dateProperty());
-        beianUrl.setCellValueFactory(cellData -> cellData.getValue().dateProperty());
-
+        beianUrl.setCellValueFactory(cellData -> cellData.getValue().beianUrlProperty());
+        beianTable.setItems(companyBeianTableModels);
 
     }
     @FXML
@@ -198,7 +199,7 @@ public class Controller {
         return companyTable;
     }
 
-    public TableView<String> getBeianTable() {
+    public TableView<CompanyBeianTableModel> getBeianTable() {
         return beianTable;
     }
 
