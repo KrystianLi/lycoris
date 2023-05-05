@@ -80,6 +80,8 @@ public class Controller {
 
     @FXML
     private TableColumn<CompanyTableModel, String> active;
+    @FXML
+    private TableColumn<CompanyTableModel, String> href;
 
     private ObservableList<CompanyTableModel> companyTableModels = FXCollections.observableArrayList();
 
@@ -118,6 +120,7 @@ public class Controller {
         email.setCellValueFactory(cellData -> cellData.getValue().emailProperty());
         shareholder.setCellValueFactory(cellData -> cellData.getValue().shareholderProperty());
         active.setCellValueFactory(cellData -> cellData.getValue().activeProperty());
+        href.setCellValueFactory(cellData -> cellData.getValue().hrefProperty());
         companyTable.setItems(companyTableModels);
 
 

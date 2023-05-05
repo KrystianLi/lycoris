@@ -11,6 +11,7 @@
    <VBox spacing="10.0" alignment="TOP_CENTER" stylesheets="index.css">
       <Button graphicTextGap="0.0" onAction="#handleButton3" text="设置" styleClass="flat-button" />
       <Button graphicTextGap="0.0" onAction="#infoButton" text="信息收集" styleClass="flat-button" />
+      <Button graphicTextGap="0.0" onAction="#asistButton" text="辅助工具" styleClass="flat-button" />
       <Button graphicTextGap="0.0" onAction="#landrayButton" text="蓝凌OA" styleClass="flat-button" />
    </VBox>
    </left>
@@ -19,8 +20,11 @@
          <AnchorPane fx:id="info" visible="true">
             <fx:include source="info.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </AnchorPane>
+         <AnchorPane fx:id="assist" visible="false">
+            <fx:include source="assist.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+         </AnchorPane>
          <AnchorPane fx:id="landray" visible="false">
-            <fx:include fx:id="landrayxml" source="landray.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <fx:include source="landray.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </AnchorPane>
          <AnchorPane fx:id="pane3" prefHeight="400" prefWidth="400" style="-fx-background-color: #00f" visible="false" />
       </StackPane>

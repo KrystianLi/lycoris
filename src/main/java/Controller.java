@@ -10,12 +10,23 @@ public class Controller {
     private AnchorPane landray;
     @FXML
     private AnchorPane pane3;
+    @FXML
+    private AnchorPane assist;
 
     @FXML
     private void infoButton() {
         info.setVisible(true);
         landray.setVisible(false);
         pane3.setVisible(false);
+        assist.setVisible(false);
+    }
+
+    @FXML
+    private void asistButton() {
+        info.setVisible(false);
+        landray.setVisible(false);
+        pane3.setVisible(false);
+        assist.setVisible(true);
     }
 
     @FXML
@@ -23,6 +34,7 @@ public class Controller {
         info.setVisible(false);
         landray.setVisible(true);
         pane3.setVisible(false);
+        assist.setVisible(false);
     }
 
     @FXML
@@ -30,7 +42,10 @@ public class Controller {
         info.setVisible(false);
         landray.setVisible(false);
         pane3.setVisible(true);
+        assist.setVisible(false);
     }
+
+
 
 
 }

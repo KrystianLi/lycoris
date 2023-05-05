@@ -65,6 +65,10 @@ public class TianYanService extends ExpStrategy {
                 //获取最早成立的公司和总数，记录下时间为当前日期 &sortType=4
                 String uri = "/search?key="+keyWord+"&sortType=4";
                 Document doc = Jsoup.parse(new URL(BASE_NAME_URL+uri), 3000);
+                if (isBand(doc)){
+                    Platform.runLater(() ->Controller.getInstance().logCompanyNameArea.appendText("[+]天眼查: 查询异常, 你被拉黑, 请更换IP\n"));
+                    return;
+                }
                 List<CompanyTableModel> stringList = parseCompanyName(doc);
                 List<String> dateList = stringList.stream()
                         .map(obj -> obj.getDate())
@@ -90,6 +94,10 @@ public class TianYanService extends ExpStrategy {
                         String url = "https://www.tianyancha.com/search?key=" + keyWord + "&estiblishTimeStart="+startTime+"&pageNum="+i+"&sortType=4";
                         Platform.runLater(()->Controller.getInstance().logCompanyNameArea.appendText("[+]天眼查: 正在访问: "+url+"\n"));
                         Document tempDoc = Jsoup.parse(new URL(url), 3000);
+                        if (isBand(tempDoc)){
+                            Platform.runLater(() ->Controller.getInstance().logCompanyNameArea.appendText("[+]天眼查: 查询异常, 你被拉黑, 请更换IP\n"));
+                            return;
+                        }
                         List<CompanyTableModel> tempList = parseCompanyName(tempDoc);
                         companyNameList = Stream.concat(companyNameList.stream(), tempList.stream())
                                 .collect(Collectors.toList());
@@ -182,8 +190,8 @@ public class TianYanService extends ExpStrategy {
                 stringBuilder.append("成立日期: "+date+"\n");
                 stringBuilder.append("邮箱: "+ emailContent+"\n");
                 stringBuilder.append("股东信息: "+shareholderContent+"\n");
-                CompanyTableModel companyTableModel = new CompanyTableModel(id++,text,date,emailContent,shareholderContent,activeContent);
-                companyTableModels.add(companyTableModel);
+                CompanyTableModel companyTableModel = new CompanyTableModel(id++,text,date,emailContent,shareholderContent,activeContent,href);
+                    companyTableModels.add(companyTableModel);
             }
         } catch (Exception e) {
             System.out.println("异常类型：" + e.getClass().getName());
@@ -282,6 +290,20 @@ public class TianYanService extends ExpStrategy {
             companyTableModels.add(companyBeianTableModel);
         }
         return companyTableModels;
+    }
+
+    /**
+     * 检测是否被band掉IP，因为请求频繁
+     * @param doc
+     * @return
+     */
+    private Boolean isBand(Document doc){
+        Elements select = doc.select("div.sign-in");
+        if (select != null && select.size() > 0){
+            return true;
+        }else {
+            return false;
+        }
     }
     @Override
     public Boolean stopCompany() {

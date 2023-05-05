@@ -15,14 +15,16 @@ public class CompanyTableModel {
     private  String email;
     private  String shareholder;
     private  String active;
+    private  String href;
 
-    public CompanyTableModel(int id, String name, String date, String email, String shareholder, String active) {
+    public CompanyTableModel(int id, String name, String date, String email, String shareholder, String active,String href) {
         this.id = id;
         this.name = name;
         this.date = date;
         this.email = email;
         this.shareholder = shareholder;
         this.active = active;
+        this.href = href;
     }
 
     public int getId() {
@@ -73,6 +75,13 @@ public class CompanyTableModel {
         this.active = active;
     }
 
+    public String getHref() {
+        return href;
+    }
+
+    public void setHref(String href) {
+        this.href = href;
+    }
 
     public IntegerProperty idProperty() {
         return new SimpleIntegerProperty(id);
@@ -98,5 +107,8 @@ public class CompanyTableModel {
 
     public StringProperty activeProperty() {
         return new SimpleStringProperty(active);
+    }
+    public StringProperty hrefProperty() {
+        return new SimpleStringProperty(href);
     }
 }

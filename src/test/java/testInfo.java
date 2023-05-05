@@ -1,15 +1,15 @@
-import com.hello.info.controller.Controller;
 import com.hello.tools.DateUtil;
 import com.hello.tools.MyExecutor;
-import javafx.application.Platform;
 import org.junit.Test;
 
-import java.text.SimpleDateFormat;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 public class testInfo {
     @Test
@@ -67,6 +67,36 @@ public class testInfo {
         System.out.println("暂停结束");
         while (true){
 
+        }
+    }
+
+    @Test
+    public void compareTwoFile() throws IOException {
+        String oldFile = "C:\\Users\\hello\\Desktop\\myt\\mycode\\lycoris\\src\\main\\resources\\1.txt";
+        String newFile = "C:\\Users\\hello\\Desktop\\myt\\mycode\\lycoris\\src\\main\\resources\\2.txt";
+        List<String> list1 =  Files.readAllLines(Paths.get(oldFile));
+        List<String> list2 =  Files.readAllLines(Paths.get(newFile));
+
+        System.out.println("比较"+oldFile+"和 "+newFile+" 两个文件，以 "+oldFile+" 为主");
+        List<String> finalList = list1.stream().filter(line ->
+                list2.stream().filter(line2 -> line2.equals(line)).count() == 0
+        ).collect(Collectors.toList());
+
+        List<String> finalList2 = list2.stream().filter(line ->
+                list1.stream().filter(line1 -> line1.equals(line)).count() == 0
+        ).collect(Collectors.toList());
+        if (finalList.size() != 0) {
+            System.out.println("[+]主文件比多数据：");
+            finalList.forEach(one -> System.out.println(one));
+        }else {
+            System.out.println("[-]主文件比多数据无差异");
+        }
+
+        if (finalList2.size() != 0) {
+            System.out.println("[+]主文件比少数据：");
+            finalList2.forEach(one -> System.out.println(one));
+        }else {
+            System.out.println("[-]主文件比少数据无差异");
         }
     }
 }
