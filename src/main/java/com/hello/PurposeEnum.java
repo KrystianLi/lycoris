@@ -8,7 +8,7 @@ public enum PurposeEnum {
     ALL("ALL","",""),
     //蓝凌OA
     LandrayOA("LandrayOA", "", ""),
-    LandrayUnauthorizedRCE("LandrayOA", "LandrayUnauthorizedRCE", "com.yeq.landray.service.LandrayUnauthorizedRCEService"),
+    LandrayUnauthorizedRCE("LandrayOA", "LandrayUnauthorizedRCE", "com.hello.landray.service.LandrayUnauthorizedRCEService"),
 
     //信息收集
     Info("Info", "", ""),

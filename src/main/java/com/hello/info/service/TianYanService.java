@@ -6,13 +6,20 @@ import com.hello.info.model.CompanyTableModel;
 import com.hello.strategy.ExpStrategy;
 import com.hello.tools.DateUtil;
 import com.hello.tools.MyExecutor;
+import com.hello.tools.net.HttpClient45;
+import com.hello.tools.net.listener.FailedListener;
+import com.hello.tools.net.listener.SuccessListener;
 import javafx.application.Platform;
+import org.apache.http.HttpEntity;
+import org.apache.http.util.EntityUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
@@ -64,7 +71,28 @@ public class TianYanService extends ExpStrategy {
 
                 //获取最早成立的公司和总数，记录下时间为当前日期 &sortType=4
                 String uri = "/search?key="+keyWord+"&sortType=4";
-                Document doc = Jsoup.parse(new URL(BASE_NAME_URL+uri), 3000);
+                URL url1 = new URL(BASE_NAME_URL + uri);
+                StringBuilder responseSB = new StringBuilder();
+                HttpClient45.get(BASE_NAME_URL + uri, null, new SuccessListener() {
+                    @Override
+                    public void successListener(HttpEntity entity) {
+                        try {
+                            String response= EntityUtils.toString(entity);
+                            responseSB.append(response);
+                        }catch (IOException e){
+                            for (StackTraceElement stackTraceElement : e.getStackTrace()) {
+                                System.out.println(stackTraceElement);
+                            }
+                        }
+                    }
+                }, new FailedListener() {
+                    @Override
+                    public void failedListener(Exception e) {
+                        //暂时不做处理
+                    }
+                });
+
+                Document doc = Jsoup.parse(responseSB.toString());
                 if (isBand(doc)){
                     Platform.runLater(() ->Controller.getInstance().logCompanyNameArea.appendText("[+]天眼查: 查询异常, 你被拉黑, 请更换IP\n"));
                     return;
@@ -93,7 +121,25 @@ public class TianYanService extends ExpStrategy {
     //                    记录5页以内包含第5页的最近日期，替换为当前日期
                         String url = "https://www.tianyancha.com/search?key=" + keyWord + "&estiblishTimeStart="+startTime+"&pageNum="+i+"&sortType=4";
                         Platform.runLater(()->Controller.getInstance().logCompanyNameArea.appendText("[+]天眼查: 正在访问: "+url+"\n"));
-                        Document tempDoc = Jsoup.parse(new URL(url), 3000);
+                        HttpClient45.get(url, null, new SuccessListener() {
+                            @Override
+                            public void successListener(HttpEntity entity) {
+                                try {
+                                    responseSB.setLength(0);
+                                    responseSB.append(EntityUtils.toString(entity));
+                                }catch (IOException e){
+                                    for (StackTraceElement stackTraceElement : e.getStackTrace()) {
+                                        System.out.println(stackTraceElement);
+                                    }
+                                }
+                            }
+                        }, new FailedListener() {
+                            @Override
+                            public void failedListener(Exception e) {
+
+                            }
+                        });
+                        Document tempDoc = Jsoup.parse(responseSB.toString());
                         if (isBand(tempDoc)){
                             Platform.runLater(() ->Controller.getInstance().logCompanyNameArea.appendText("[+]天眼查: 查询异常, 你被拉黑, 请更换IP\n"));
                             return;
