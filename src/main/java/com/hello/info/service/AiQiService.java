@@ -15,7 +15,7 @@ import java.util.concurrent.CompletableFuture;
 public class AiQiService extends ExpStrategy {
 
     @Override
-    public String searchCompanyName(String keyWord, String filterWorld) {
+    public String searchCompanyName(String keyWord) {
         CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
             try {
                 String url = "https://www.example.com";
@@ -48,7 +48,7 @@ public class AiQiService extends ExpStrategy {
     }
 
     @Override
-    public String searchCompanyBeian(String keyWord, String filterWorld) {
+    public String searchCompanyBeian(String keyWord) {
         System.out.println("爱企查 start——查询公司备案");
         return "";
     }

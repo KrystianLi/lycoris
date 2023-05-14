@@ -17,6 +17,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import javax.rmi.CORBA.Util;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -41,10 +42,20 @@ public class TianYanService extends ExpStrategy {
     private final String BASE_NAME_URL = "https://www.tianyancha.com";
     private final String BASE_BEIAN_URL = "https://beian.tianyancha.com";
     private ThreadPoolExecutor executor;
+    private CompletableFuture<Void> future;
+    private HashMap<String, String> headerMap;
+
+    public TianYanService() {
+        headerMap = new HashMap<>();
+        headerMap.put("Pragma","no-cache");
+        headerMap.put("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36 Edg/113.0.1774.42");
+        headerMap.put("Accept-Language","zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6");
+    }
+
     @Override
-    public String searchCompanyName(String keyWord, String filterWorld) {
+    public String searchCompanyName(String keyWord) {
         executor = MyExecutor.getExecutor();
-        CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+        future = CompletableFuture.runAsync(() -> {
             try {
                 String encodeKeyword = URLEncoder.encode(keyWord, "UTF-8");
                 Platform.runLater(() -> Controller.getInstance().getCompanyTable().getItems().clear());
@@ -52,7 +63,7 @@ public class TianYanService extends ExpStrategy {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        },executor);
+        }, executor);
 
         future.thenRunAsync(() -> {
             // 任务执行完成后更新进度
@@ -63,6 +74,10 @@ public class TianYanService extends ExpStrategy {
 
     private void getCompanyName(String keyWord){
             try{
+                String text = Controller.getInstance().companyNameCookie.getText();
+                if (!text.isEmpty()){
+                    headerMap.put("Cookie",text);
+                }
                 //日期格式：2022-01-01
                 Date date = new Date();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -71,9 +86,8 @@ public class TianYanService extends ExpStrategy {
 
                 //获取最早成立的公司和总数，记录下时间为当前日期 &sortType=4
                 String uri = "/search?key="+keyWord+"&sortType=4";
-                URL url1 = new URL(BASE_NAME_URL + uri);
                 StringBuilder responseSB = new StringBuilder();
-                HttpClient45.get(BASE_NAME_URL + uri, null, new SuccessListener() {
+                HttpClient45.get(BASE_NAME_URL + uri, headerMap, new SuccessListener() {
                     @Override
                     public void successListener(HttpEntity entity) {
                         try {
@@ -115,13 +129,16 @@ public class TianYanService extends ExpStrategy {
                     isFirst = false;
                 }
 
+
                 //循环，从当前日期查询一年内的公司，直到当前日期等于实际日期
                 while (!DateUtil.DateComparisonAfter(startTime,endDate) && companyNameList.size() < total && !isBreak){
                     for (int i = 1; i <= 5; i++){
     //                    记录5页以内包含第5页的最近日期，替换为当前日期
                         String url = "https://www.tianyancha.com/search?key=" + keyWord + "&estiblishTimeStart="+startTime+"&pageNum="+i+"&sortType=4";
                         Platform.runLater(()->Controller.getInstance().logCompanyNameArea.appendText("[+]天眼查: 正在访问: "+url+"\n"));
-                        HttpClient45.get(url, null, new SuccessListener() {
+                        //加入延迟，一是避免速度过快，二是这里需要用sleep异常来中断整个异步任务
+                        Thread.sleep(100);
+                        HttpClient45.get(url, headerMap, new SuccessListener() {
                             @Override
                             public void successListener(HttpEntity entity) {
                                 try {
@@ -172,12 +189,12 @@ public class TianYanService extends ExpStrategy {
                 }
                 int tempNum = companyNameList.size();
                 Platform.runLater(()->Controller.getInstance().logCompanyNameArea.appendText("[+]天眼查: 共计查询到"+tempNum+"条\n"));
-    //            System.out.println("共计查询到"+companyNameList.size()+"条");
 
-            }catch (Exception e){
-                for (StackTraceElement stackTraceElement : e.getStackTrace()) {
-                    System.out.println(stackTraceElement);
-                }
+            }catch (InterruptedException e){
+                Platform.runLater(()->Controller.getInstance().logCompanyNameArea.appendText("[-]任务已终止\n"));
+            }
+            catch (Exception e){
+                e.printStackTrace();
             }
     }
 
@@ -250,9 +267,9 @@ public class TianYanService extends ExpStrategy {
     }
 
     @Override
-    public String searchCompanyBeian(String keyWord, String filterWorld) {
-        ThreadPoolExecutor executor = MyExecutor.getExecutor();
-        CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+    public String searchCompanyBeian(String keyWord) {
+        executor = MyExecutor.getExecutor();
+        future = CompletableFuture.runAsync(() -> {
             try {
                 String encodeKeyword = URLEncoder.encode(keyWord, "UTF-8");
                 Platform.runLater(() -> Controller.getInstance().getBeianTable().getItems().clear());
@@ -271,8 +288,34 @@ public class TianYanService extends ExpStrategy {
 
     private void getCompanyBeian(String keyWord){
         try {
-            String uri = "/search/"+keyWord;
-            Document doc = Jsoup.parse(new URL(BASE_BEIAN_URL+uri), 3000);
+            String text = Controller.getInstance().companyBeianCookie.getText();
+            if (!text.isEmpty()){
+                headerMap.put("Cookie",text);
+            }
+            String uri = BASE_BEIAN_URL + "/search/"+keyWord;
+
+            StringBuilder responseSB = new StringBuilder();
+
+            HttpClient45.get(uri, headerMap, new SuccessListener() {
+                @Override
+                public void successListener(HttpEntity entity) {
+                    try {
+                        String response= EntityUtils.toString(entity);
+                        responseSB.append(response);
+                    }catch (IOException e){
+                        for (StackTraceElement stackTraceElement : e.getStackTrace()) {
+                            System.out.println(stackTraceElement);
+                        }
+                    }
+                }
+            }, new FailedListener() {
+                @Override
+                public void failedListener(Exception e) {
+
+                }
+            });
+
+            Document doc = Jsoup.parse(responseSB.toString());
 
             Elements select = doc.select("div:contains(抱歉，没有找到相关结果！)");
             if (!select.isEmpty()){
@@ -291,8 +334,30 @@ public class TianYanService extends ExpStrategy {
             }
             if (pageNum != 0){
                 for (int i = 2; i < pageNum; i++) {
-                    String url = BASE_BEIAN_URL+uri+"/p"+i;
-                    Document tempDoc = Jsoup.parse(new URL(url), 3000);
+                    String url = uri+"/p"+i;
+                    HttpClient45.get(url, headerMap, new SuccessListener() {
+                        @Override
+                        public void successListener(HttpEntity entity) {
+                            try {
+                                responseSB.setLength(0);
+                                responseSB.append(EntityUtils.toString(entity));
+                            }catch (IOException e){
+                                for (StackTraceElement stackTraceElement : e.getStackTrace()) {
+                                    System.out.println(stackTraceElement);
+                                }
+                            }
+                        }
+                    }, new FailedListener() {
+                        @Override
+                        public void failedListener(Exception e) {
+                            for (StackTraceElement stackTraceElement : e.getStackTrace()) {
+                                System.out.println(stackTraceElement);
+                            }
+                        }
+                    });
+                    //加入延迟，一是避免速度过快，二是这里需要用sleep异常来中断整个异步任务
+                    Thread.sleep(100);
+                    Document tempDoc = Jsoup.parse(responseSB.toString());
                     Platform.runLater(()->Controller.getInstance().logCompanyBeianArea.appendText("[+]天眼查: 正在访问: "+url+"\n"));
                     if (tempDoc.select("div:containsOwn(登录后查看更多信息)").size() != 0){
                         Platform.runLater(()->Controller.getInstance().logCompanyBeianArea.appendText("[+]天眼查: 登录后查看更多信息\n"));
@@ -308,7 +373,7 @@ public class TianYanService extends ExpStrategy {
                 }
             }
             //获取实际总条数
-            String tempNum = companyBeianList.get(companyBeianList.size()).getId();
+            String tempNum = companyBeianList.get(companyBeianList.size()-1).getId();
             Platform.runLater(()->Controller.getInstance().logCompanyBeianArea.appendText("[+]天眼查: 共计查询到"+tempNum+"条\n"));
 
         }catch (Exception e){
@@ -353,6 +418,11 @@ public class TianYanService extends ExpStrategy {
     }
     @Override
     public Boolean stopCompany() {
-        return false;
+        if (!future.isDone()){
+            executor.shutdownNow();
+            return true;
+        }else {
+            return false;
+        }
     }
 }

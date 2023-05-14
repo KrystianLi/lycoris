@@ -42,7 +42,7 @@ public abstract class ExpStrategy{
      */
     public String uploadFile(String url, String filename ,String fileContent){ throw new UnsupportedOperationException();}
 
-    public String searchCompanyName(String keyWord,String filterWorld){ throw new UnsupportedOperationException();}
-    public String searchCompanyBeian(String keyWord,String filterWorld){ throw new UnsupportedOperationException();}
+    public String searchCompanyName(String keyWord){ throw new UnsupportedOperationException();}
+    public String searchCompanyBeian(String keyWord){ throw new UnsupportedOperationException();}
     public Boolean stopCompany(){ throw new UnsupportedOperationException();}
 }

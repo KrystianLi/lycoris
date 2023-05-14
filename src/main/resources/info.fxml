@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Tab?>
@@ -9,16 +10,15 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Text?>
-
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.202" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.hello.info.controller.Controller">
 
    <children>
 
-      <TabPane tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" >
+      <TabPane tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <tabs>
             <Tab text="公司查询">
                <content>
@@ -26,43 +26,34 @@
                         <children>
                            <HBox alignment="CENTER_LEFT">
                                 <children>
-                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="关键词" >
+                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="关键词">
                                         <HBox.margin>
                                             <Insets right="10.0" />
                                         </HBox.margin>
                                     </Text>
-                                    <TextField fx:id="companyText" prefHeight="30.0" prefWidth="211.0" promptText="公司名关键词信息" >
+                                    <TextField fx:id="companyText" prefHeight="30.0" prefWidth="211.0" promptText="公司名关键词信息">
                                         <HBox.margin>
                                             <Insets right="20.0" />
                                         </HBox.margin>
                                     </TextField>
-                                   <ComboBox fx:id="searchCompanyNameComboBox" prefWidth="100.0" >
+                                   <ComboBox fx:id="searchCompanyNameComboBox" prefWidth="100.0">
                                        <HBox.margin>
                                            <Insets right="20.0" />
                                        </HBox.margin>
                                    </ComboBox>
 
-                                   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="过滤词" >
-                                       <HBox.margin>
-                                           <Insets right="10.0" />
-                                       </HBox.margin>
-                                   </Text>
-                                   <TextField fx:id="filterText" prefHeight="30.0" prefWidth="211.0" promptText="过滤公司名中存在字符" >
-                                       <HBox.margin>
-                                           <Insets right="20.0" />
-                                       </HBox.margin>
-                                   </TextField>
-                                   <Button fx:id="companyNameSearchBtn" mnemonicParsing="false" onAction="#companyNameSearch" text="查询" >
+
+                                   <Button fx:id="companyNameSearchBtn" mnemonicParsing="false" onAction="#companyNameSearch" text="查询">
                                        <HBox.margin>
                                            <Insets right="10.0" />
                                        </HBox.margin>
                                    </Button>
-                                    <Button fx:id="companyNameStopBtn" mnemonicParsing="false" onAction="#companyNameStop" text="停止" >
+                                    <Button fx:id="companyNameStopBtn" mnemonicParsing="false" onAction="#companyStop" text="停止">
                                         <HBox.margin>
                                             <Insets right="10.0" />
                                         </HBox.margin>
                                     </Button>
-                                   <Button fx:id="companyNameSaveBtn" mnemonicParsing="false" onAction="#companyNameSave" text="保存" >
+                                   <Button fx:id="companyNameSaveBtn" mnemonicParsing="false" onAction="#companyNameSave" text="保存">
                                        <HBox.margin>
                                            <Insets />
                                        </HBox.margin>
@@ -72,11 +63,28 @@
                                    <Insets left="20.0" right="20.0" top="20.0" />
                                </padding>
                            </HBox>
+                        <HBox alignment="CENTER_LEFT">
+                           <children>
+                              <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Cookie">
+                                 <HBox.margin>
+                                    <Insets right="10.0" />
+                                 </HBox.margin>
+                              </Text>
+                              <TextField fx:id="companyNameCookie" prefHeight="30.0" promptText="cookie信息" HBox.hgrow="ALWAYS">
+                                 <HBox.margin>
+                                    <Insets right="20.0" />
+                                 </HBox.margin>
+                              </TextField>
+                           </children>
+                           <padding>
+                              <Insets left="20.0" right="20.0" top="20.0" />
+                           </padding>
+                        </HBox>
                            <VBox VBox.vgrow="ALWAYS">
                                <children>
-                                   <TableView fx:id="companyTable" >
+                                   <TableView fx:id="companyTable">
                                        <columns>
-                                           <TableColumn fx:id="id"  text="序号" />
+                                           <TableColumn fx:id="id" text="序号" />
                                            <TableColumn fx:id="name" text="公司名" />
                                            <TableColumn fx:id="date" text="成立日期" />
                                            <TableColumn fx:id="email" text="邮箱" />
@@ -95,7 +103,7 @@
                            </VBox>
                             <VBox VBox.vgrow="ALWAYS">
                                 <children>
-                                    <TextArea fx:id="logCompanyNameArea" VBox.vgrow="ALWAYS" >
+                                    <TextArea fx:id="logCompanyNameArea" VBox.vgrow="ALWAYS">
                                         <VBox.margin>
                                             <Insets />
                                         </VBox.margin>
@@ -117,43 +125,60 @@
                           <children>
                             <HBox alignment="CENTER_LEFT">
                               <children>
-                                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="关键词" >
+                                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="关键词">
                                       <HBox.margin>
                                           <Insets right="10.0" />
                                       </HBox.margin>
                                   </Text>
 
-                                  <TextField fx:id="beianText" prefHeight="30.0" prefWidth="211.0" promptText="备案关键词信息" >
+                                  <TextField fx:id="beianText" prefHeight="30.0" prefWidth="211.0" promptText="备案关键词信息">
                                       <HBox.margin>
                                           <Insets right="20.0" />
                                       </HBox.margin>
                                    </TextField>
-                               <ComboBox fx:id="searchBeianComboBox" prefWidth="100.0" >
+                               <ComboBox fx:id="searchBeianComboBox" prefWidth="100.0">
                                    <HBox.margin>
                                        <Insets right="20.0" />
                                    </HBox.margin>
                                </ComboBox>
-                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="过滤词" >
-                                   <HBox.margin>
-                                       <Insets right="10.0" />
-                                   </HBox.margin>
-                               </Text>
-                               <TextField fx:id="filterBeianText" prefHeight="30.0" prefWidth="211.0" promptText="过滤公司名中存在字符" >
-                                   <HBox.margin>
-                                       <Insets right="20.0" />
-                                   </HBox.margin>
-                               </TextField>
-                               <Button fx:id="companyBeianSearchBtn" mnemonicParsing="false" onAction="#companyBeianSearch" text="查询" >
+
+                               <Button fx:id="companyBeianSearchBtn" mnemonicParsing="false" onAction="#companyBeianSearch" text="查询">
                                    <HBox.margin>
                                        <Insets right="10.0" />
                                    </HBox.margin>
                                </Button>
-
+                                  <Button fx:id="companyBeianStopBtn" mnemonicParsing="false" onAction="#companyStop" text="停止">
+                                      <HBox.margin>
+                                          <Insets right="10.0" />
+                                      </HBox.margin>
+                                  </Button>
+                                  <Button fx:id="companyBeianSaveBtn" mnemonicParsing="false" onAction="#companyBeianSave" text="保存">
+                                      <HBox.margin>
+                                          <Insets />
+                                      </HBox.margin>
+                                  </Button>
                               </children>
                               <padding>
                                   <Insets left="20.0" right="20.0" top="20.0" />
                               </padding>
                             </HBox>
+                              <HBox alignment="CENTER_LEFT">
+                                  <children>
+                                      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Cookie">
+                                          <HBox.margin>
+                                              <Insets right="10.0" />
+                                          </HBox.margin>
+                                      </Text>
+                                      <TextField fx:id="companyBeianCookie" prefHeight="30.0" promptText="cookie信息" HBox.hgrow="ALWAYS">
+                                          <HBox.margin>
+                                              <Insets right="20.0" />
+                                          </HBox.margin>
+                                      </TextField>
+                                  </children>
+                                  <padding>
+                                      <Insets left="20.0" right="20.0" top="20.0" />
+                                  </padding>
+                              </HBox>
                               <VBox VBox.vgrow="ALWAYS">
                                   <children>
                                       <TableView fx:id="beianTable">
@@ -162,8 +187,8 @@
                                               <TableColumn fx:id="beianNo" text="网站备案/许可证号" />
                                               <TableColumn fx:id="beianCompanyName" text="主办单位名称" />
                                               <TableColumn fx:id="beianSiteName" text="网站名称" />
-                                              <TableColumn fx:id="beianSiteDomain"  text="网站域名" />
-                                              <TableColumn fx:id="beianDate"  text="审核时间" />
+                                              <TableColumn fx:id="beianSiteDomain" text="网站域名" />
+                                              <TableColumn fx:id="beianDate" text="审核时间" />
                                               <TableColumn fx:id="beianUrl" text="URL" />
                                           </columns>
                                           <columnResizePolicy>

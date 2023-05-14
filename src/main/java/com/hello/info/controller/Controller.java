@@ -16,6 +16,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import org.omg.PortableInterceptor.ACTIVE;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -39,6 +40,8 @@ public class Controller {
     private Button companyNameStopBtn;
 
     @FXML
+    public TextField companyNameCookie;
+    @FXML
     private TableView<CompanyTableModel> companyTable;
 
 
@@ -46,6 +49,13 @@ public class Controller {
     @FXML
     private TextField beianText;
 
+    @FXML
+    private Button companyBeianStopBtn;
+    @FXML
+    private Button companyBeianSaveBtn;
+
+    @FXML
+    public TextField companyBeianCookie;
     @FXML
     private ComboBox<String> searchBeianComboBox;
 
@@ -86,9 +96,11 @@ public class Controller {
     private ObservableList<CompanyTableModel> companyTableModels = FXCollections.observableArrayList();
 
     private ExpStrategy InfoName;
+    private ExpStrategy InfoBeian;
     //备案查询表格
     @FXML
     private TableView<CompanyBeianTableModel> beianTable;
+
     //备案号列名
     @FXML
     private TableColumn<CompanyBeianTableModel, String> beianId;
@@ -145,10 +157,9 @@ public class Controller {
     void companyBeianSearch(ActionEvent event) {
         String cve = this.searchBeianComboBox.getValue().toString().trim();
         String keyWord = this.beianText.getText();
-        String filterWord = this.filterBeianText.getText();
-        ExpStrategy Info = ExpFactory.getFactApplyStrategy(cve);
+        InfoBeian = ExpFactory.getFactApplyStrategy(cve);
         try {
-            String s = Info.searchCompanyBeian(keyWord,filterWord);
+            String s = InfoBeian.searchCompanyBeian(keyWord);
             System.out.println(s);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -158,10 +169,9 @@ public class Controller {
     void companyNameSearch(ActionEvent event){
         String cve = this.searchCompanyNameComboBox.getValue().toString().trim();
         String keyWord = this.companyText.getText();
-        String filterWord = this.filterText.getText();
         InfoName = ExpFactory.getFactApplyStrategy(cve);
         try {
-            String s = InfoName.searchCompanyName(keyWord,filterWord);
+            String s = InfoName.searchCompanyName(keyWord);
         } catch (Exception e) {
             for (StackTraceElement stackTraceElement : e.getStackTrace()) {
                 System.out.println(stackTraceElement.toString());
@@ -170,26 +180,26 @@ public class Controller {
     }
 
     @FXML
-    void companyNameStop(ActionEvent event){
+    void companyStop(ActionEvent event){
         try {
-            Boolean aBoolean = InfoName.stopCompany();
+            Boolean aBoolean = false;
+            if (InfoName != null){
+                aBoolean = InfoName.stopCompany();
+            } else if (InfoBeian != null) {
+                aBoolean = InfoBeian.stopCompany();
+            }
             if (aBoolean){
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("提示");
                 alert.setHeaderText(null);
                 alert.setContentText("停止成功");
                 alert.showAndWait();
-            }else {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("提示");
-                alert.setHeaderText("作者能力有限，等有缘人给我补充代码");
-                alert.setContentText("停止失败，请结束程序");
-                alert.showAndWait();
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
+
     public Controller() {
         instance = this;
     }
@@ -207,7 +217,7 @@ public class Controller {
     }
 
     public void companyNameSave(ActionEvent event) {
-        String sheetName = "信息导出";
+        String sheetName = "公司查询导出";
         List<CompanyTableModel> companyTableModelList = getCompanyTable().getItems();
         LinkedHashMap<String, String> titleMap = new LinkedHashMap<String, String>();
         titleMap.put("id","id");
@@ -216,7 +226,27 @@ public class Controller {
         titleMap.put("email","邮箱");
         titleMap.put("shareholder","股东信息");
         titleMap.put("active","活跃状态");
+        titleMap.put("href","链接");
         ExportExcel.excelExport(companyTableModelList, titleMap, sheetName);
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("提示");
+        alert.setHeaderText(null);
+        alert.setContentText("导出完成");
+        alert.showAndWait();
+    }
+
+    public void companyBeianSave(ActionEvent event){
+        String sheetName = "备案查询导出";
+        List<CompanyBeianTableModel> companyBeianTableModelList = getBeianTable().getItems();
+        LinkedHashMap<String, String> titleMap = new LinkedHashMap<String, String>();
+        titleMap.put("id","id");
+        titleMap.put("beianNo","网站备案号/许可证号");
+        titleMap.put("companyName","主办单位名称");
+        titleMap.put("siteName","网站名称");
+        titleMap.put("siteDomain","网站域名");
+        titleMap.put("date","审核时间");
+        titleMap.put("beianUrl","详情");
+        ExportExcel.excelExport(companyBeianTableModelList, titleMap, sheetName);
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("提示");
         alert.setHeaderText(null);
