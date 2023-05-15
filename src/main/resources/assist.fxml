@@ -22,7 +22,7 @@
                      <children>
                         <HBox>
                            <children>
-                              <Button fx:id="compareBtn" onAction="#compare" mnemonicParsing="false" text="文本对比" />
+                              <Button fx:id="compareBtn" mnemonicParsing="false" onAction="#compare" text="文本对比" />
                            </children>
                            <VBox.margin>
                               <Insets />
@@ -65,7 +65,7 @@
                                     </Label>
                                     <TextArea fx:id="insertResTextArea" VBox.vgrow="ALWAYS" />
                                     <Label style="-fx-background-color: #ffffff;" text="比主内容少" />
-                                    <TextArea fx:id="reduceResTextArea" VBox.vgrow="ALWAYS"/>
+                                    <TextArea fx:id="reduceResTextArea" VBox.vgrow="ALWAYS" />
                                  </children>
                               </VBox>
                            </children>
@@ -80,6 +80,58 @@
                   </VBox>
                </content>
    
+            </Tab>
+            <Tab text="内容去重">
+               <content>
+                  <VBox>
+                     <children>
+                        <HBox>
+                           <children>
+                              <Button fx:id="repetitionBtn" mnemonicParsing="false" onAction="#repetition" text="一键去重" />
+                           </children>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                           <children>
+                              <VBox HBox.hgrow="ALWAYS">
+                                 <HBox.margin>
+                                    <Insets right="10.0" />
+                                 </HBox.margin>
+                                 <children>
+                                    <Label style="-fx-background-color: #ffffff;" text="内容">
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                    </Label>
+                                    <TextArea fx:id="repContentTextArea" VBox.vgrow="ALWAYS" />
+                                 </children>
+                              </VBox>
+                              <VBox HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <Label style="-fx-background-color: #ffffff;" text="结果">
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                    </Label>
+                                    <TextArea fx:id="repResultTextArea" VBox.vgrow="ALWAYS" />
+                                 </children>
+                                 <padding>
+                                    <Insets right="10.0" />
+                                 </padding>
+                              </VBox>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </padding>
+                  </VBox>
+               </content>
             </Tab>
          </tabs>
       </TabPane>
