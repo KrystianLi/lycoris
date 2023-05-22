@@ -14,10 +14,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 import org.omg.PortableInterceptor.ACTIVE;
 
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -156,6 +162,7 @@ public class Controller {
     @FXML
     void companyBeianSearch(ActionEvent event) {
         String cve = this.searchBeianComboBox.getValue().toString().trim();
+        beianTable.getItems().clear();
         String keyWord = this.beianText.getText();
         InfoBeian = ExpFactory.getFactApplyStrategy(cve);
         try {
@@ -167,6 +174,7 @@ public class Controller {
     }
     @FXML
     void companyNameSearch(ActionEvent event){
+        companyTable.getItems().clear();
         String cve = this.searchCompanyNameComboBox.getValue().toString().trim();
         String keyWord = this.companyText.getText();
         InfoName = ExpFactory.getFactApplyStrategy(cve);
@@ -252,5 +260,14 @@ public class Controller {
         alert.setHeaderText(null);
         alert.setContentText("导出完成");
         alert.showAndWait();
+    }
+
+    @FXML
+    void companyAggregation(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/info_dataAggregate.fxml"));
+        Parent root = loader.load();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 }

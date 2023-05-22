@@ -58,7 +58,6 @@ public class TianYanService extends ExpStrategy {
         future = CompletableFuture.runAsync(() -> {
             try {
                 String encodeKeyword = URLEncoder.encode(keyWord, "UTF-8");
-                Platform.runLater(() -> Controller.getInstance().getCompanyTable().getItems().clear());
                 getCompanyName(encodeKeyword);
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -272,7 +271,6 @@ public class TianYanService extends ExpStrategy {
         future = CompletableFuture.runAsync(() -> {
             try {
                 String encodeKeyword = URLEncoder.encode(keyWord, "UTF-8");
-                Platform.runLater(() -> Controller.getInstance().getBeianTable().getItems().clear());
                 getCompanyBeian(encodeKeyword);
             } catch (IOException e) {
                 throw new RuntimeException(e);

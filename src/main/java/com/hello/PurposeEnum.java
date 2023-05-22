@@ -13,7 +13,7 @@ public enum PurposeEnum {
     //信息收集
     Info("Info", "", ""),
     TianYan("Info","天眼查","com.hello.info.service.TianYanService"),
-    AiQi("Info","爱企查","com.hello.info.service.AiQiService"),
+    QiDian("Info","企典","com.hello.info.service.QiDianService"),
     ;
 
     private String expType;

@@ -96,16 +96,30 @@ public class HttpClient45 {
      * @throws IOException
      */
     public static void post(String url , Map<String,String> headers,String params, SuccessListener successListener, FailedListener failedListener) throws IOException {
-        CloseableHttpClient httpclient = HttpClients.createDefault();
-        HttpPost httpPost = new HttpPost(url);
-        //设置request头
-        setHeader(httpPost,headers);
+        //获取response
         CloseableHttpResponse response = null;
         try {
+            HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+            HttpPost httpPost = new HttpPost(url);
+
+            //设置代理
+            if (isfProxySetting){
+                HttpHost proxy = new HttpHost(ip,port,scheme);
+                RequestConfig config = RequestConfig.custom().setProxy(proxy).build();
+                httpPost.setConfig(config);
+            }
+
+            //设置request头
+            setHeader(httpPost,headers);
+
+            //绕过ssl证书检测
+            CloseableHttpClient httpClient = httpClientBuilder.setSSLSocketFactory(getSslConnectionSocketFactory()).build();
+
+
             //设置请求体内容
             httpPost.setEntity(new StringEntity(params));
             //发送post请求
-            response = httpclient.execute(httpPost);
+            response = httpClient.execute(httpPost);
             HttpEntity entity = response.getEntity();
             //获取响应状态
             System.out.println(response.getStatusLine());
@@ -116,6 +130,12 @@ public class HttpClient45 {
             EntityUtils.consume(entity);
         } catch (IOException e) {
             failedListener.failedListener(e);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        } catch (KeyStoreException e) {
+            throw new RuntimeException(e);
+        } catch (KeyManagementException e) {
+            throw new RuntimeException(e);
         } finally {
             response.close();
         }
@@ -131,17 +151,26 @@ public class HttpClient45 {
      * @throws IOException
      */
     public static void post(String url , Map<String,String> headers, JSONObject params, SuccessListener successListener, FailedListener failedListener) throws IOException {
-        CloseableHttpClient httpclient = HttpClients.createDefault();
-        HttpPost httpPost = new HttpPost(url);
-        //设置request头
-        setHeader(httpPost,headers);
         CloseableHttpResponse response = null;
         try {
+            HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+            HttpPost httpPost = new HttpPost(url);
+            //设置代理
+            if (isfProxySetting){
+                HttpHost proxy = new HttpHost(ip,port,scheme);
+                RequestConfig config = RequestConfig.custom().setProxy(proxy).build();
+                httpPost.setConfig(config);
+            }
+            //设置request头
+            setHeader(httpPost,headers);
+            //绕过ssl证书检测
+            CloseableHttpClient httpClient = httpClientBuilder.setSSLSocketFactory(getSslConnectionSocketFactory()).build();
+
             //设置请求体内容
             StringEntity stringEntity = new StringEntity(JSON.toJSONString(params), "utf-8");
             httpPost.setEntity(stringEntity);
             //发送post请求
-            response = httpclient.execute(httpPost);
+            response = httpClient.execute(httpPost);
             HttpEntity entity = response.getEntity();
             //获取响应状态
             System.out.println(response.getStatusLine());
@@ -152,6 +181,12 @@ public class HttpClient45 {
             EntityUtils.consume(entity);
         } catch (IOException e) {
             failedListener.failedListener(e);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        } catch (KeyStoreException e) {
+            throw new RuntimeException(e);
+        } catch (KeyManagementException e) {
+            throw new RuntimeException(e);
         } finally {
             response.close();
         }
