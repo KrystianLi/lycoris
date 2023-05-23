@@ -19,6 +19,11 @@
             <HBox>
                <children>
                   <Button mnemonicParsing="false" onAction="#dataAggregate" text="一键聚合" />
+                  <Button mnemonicParsing="false" onAction="#dataAggregateStop" text="停止" >
+                      <HBox.margin>
+                          <Insets right="10.0" />
+                      </HBox.margin>
+                  </Button>
                </children>
                <VBox.margin>
                   <Insets />
@@ -140,7 +145,7 @@
                               </VBox>
                               <VBox VBox.vgrow="ALWAYS">
                                  <children>
-                                    <TextArea fx:id="logCompanyBeianArea1" VBox.vgrow="ALWAYS">
+                                    <TextArea fx:id="logBranchArea" VBox.vgrow="ALWAYS">
                                        <VBox.margin>
                                           <Insets />
                                        </VBox.margin>
