@@ -1,4 +1,4 @@
-package com.hello.info.model;
+package com.hello.info.model.aggregate;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;

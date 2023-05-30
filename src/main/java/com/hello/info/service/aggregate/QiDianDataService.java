@@ -2,11 +2,11 @@ package com.hello.info.service.aggregate;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
-import com.hello.info.controller.Controller;
 import com.hello.info.controller.DataAggregateController;
-import com.hello.info.model.CompanyBranchTableModel;
-import com.hello.info.model.CompanyInvestTableModel;
-import com.hello.info.model.CompanyStockTableModel;
+import com.hello.info.model.aggregate.CompanyBeianTableModel;
+import com.hello.info.model.aggregate.CompanyBranchTableModel;
+import com.hello.info.model.aggregate.CompanyInvestTableModel;
+import com.hello.info.model.aggregate.CompanyStockTableModel;
 import com.hello.tools.MyExecutor;
 import com.hello.tools.net.HttpClient45;
 import com.hello.tools.net.listener.FailedListener;
@@ -29,11 +29,13 @@ public class QiDianDataService {
     private final String branchID = "485";
     private final String stockID = "484";
     private final String investID = "453";
+    private final String siteID = "512";
     private final int pageSize = 10;
     private HashMap<String, String> headerMap;
-    private ArrayList<CompanyBranchTableModel> companyBranchTableModel;
+    private ArrayList<CompanyBranchTableModel> companyBranchTableModels;
     private ArrayList<CompanyStockTableModel> companyStockTableModels;
     private ArrayList<CompanyInvestTableModel> companyInvestTableModels;
+    private ArrayList<CompanyBeianTableModel> companyBeianTableModels;
     public List<String> companyIdList = new ArrayList<>();
     private ThreadPoolExecutor executor;
     private CompletableFuture<Void> future;
@@ -42,9 +44,10 @@ public class QiDianDataService {
     private AtomicInteger companyInvestId = new AtomicInteger(0);
 
     public QiDianDataService() {
-        companyBranchTableModel = new ArrayList<>();
+        companyBranchTableModels = new ArrayList<>();
         companyStockTableModels = new ArrayList<>();
         companyInvestTableModels = new ArrayList<>();
+        companyBeianTableModels = new ArrayList<>();
         headerMap = new HashMap<>();
         headerMap.put("Content-Type","application/json");
         headerMap.put("Origin","https://dingtalk.com");
@@ -60,6 +63,7 @@ public class QiDianDataService {
                 Platform.runLater(()->DataAggregateController.getInstance().logBranchArea.appendText("[-]任务已终止\n"));
                 Platform.runLater(()->DataAggregateController.getInstance().logShareholderArea.appendText("[-]任务已终止\n"));
                 Platform.runLater(()->DataAggregateController.getInstance().logInvestmentArea.appendText("[-]任务已终止\n"));
+                Platform.runLater(()->DataAggregateController.getInstance().logBeianArea.appendText("[-]任务已终止\n"));
                 throw new RuntimeException(e);
             }
         },executor);
@@ -68,6 +72,7 @@ public class QiDianDataService {
                 DataAggregateController.getInstance().logBranchArea.appendText("[+]任务已完成\n");
                 DataAggregateController.getInstance().logShareholderArea.appendText("[+]任务已完成\n");
                 DataAggregateController.getInstance().logInvestmentArea.appendText("[+]任务已完成\n");
+                DataAggregateController.getInstance().logBeianArea.appendText("[+]任务已完成\n");
             });
         });
 
@@ -86,9 +91,9 @@ public class QiDianDataService {
             parseCompanyBranch(onecomp_id);
             parseCompanyStock(onecomp_id);
             parseCompanyInvest(onecomp_id);
+            parseCompanyBeian(onecomp_id);
             Thread.sleep(100);
         }
-
     }
 
     /**
@@ -253,7 +258,7 @@ public class QiDianDataService {
                                 shouldCapiTime= ((JSONArray) o).get(4) == null ? "" : ((JSONArray) o).get(4).toString();
                             }
                         }catch (Exception e){
-                            System.out.println("数据类型转换失败");
+                            System.out.println("[-]解析公司股东: 数据类型转换失败");
                         }
 
 
@@ -305,7 +310,7 @@ public class QiDianDataService {
                                     shouldCapiTime= ((JSONArray) o).get(4) == null ? "" : ((JSONArray) o).get(4).toString();
                                 }
                             }catch (Exception e){
-                                System.out.println("数据类型转换失败");
+                                System.out.println("[-]解析公司股东: 数据类型转换失败");
                             }
 
 
@@ -368,15 +373,13 @@ public class QiDianDataService {
                                 term_start= ((JSONArray) o).get(3) == null ? "" : ((JSONArray) o).get(3).toString();
                             }
                         }catch (Exception e){
-                            System.out.println("数据类型转换失败");
+                            System.out.println("[-]解析分支机构: 数据类型转换失败");
                         }
-
-
                         //存储数据
-                        CompanyBranchTableModel companyBranchTableModel1 = new CompanyBranchTableModel(companyBranchId.incrementAndGet(), value, status, oper_name, term_start, onecompId);
+                        CompanyBranchTableModel companyBranchTableModel = new CompanyBranchTableModel(companyBranchId.incrementAndGet(), value, status, oper_name, term_start, onecompId);
                         //更新数据表格
-                        Platform.runLater(()-> DataAggregateController.getInstance().branchTable.getItems().add(companyBranchTableModel1));
-                        companyBranchTableModel.add(companyBranchTableModel1);
+                        Platform.runLater(()-> DataAggregateController.getInstance().branchTable.getItems().add(companyBranchTableModel));
+                        companyBranchTableModels.add(companyBranchTableModel);
                     }
 
                 }
@@ -418,13 +421,13 @@ public class QiDianDataService {
                                     term_start= ((JSONArray) o).get(3) == null ? "" : ((JSONArray) o).get(3).toString();
                                 }
                             }catch (Exception e){
-                                System.out.println("数据类型转换失败");
+                                System.out.println("[-]解析分支机构: 数据类型转换失败");
                             }
                             //存储数据
-                            CompanyBranchTableModel companyBranchTableModel1 = new CompanyBranchTableModel(companyBranchId.incrementAndGet(), value, status, oper_name, term_start, onecompId);
+                            CompanyBranchTableModel companyBranchTableModel = new CompanyBranchTableModel(companyBranchId.incrementAndGet(), value, status, oper_name, term_start, onecompId);
                             //更新数据表格
-                            Platform.runLater(()-> DataAggregateController.getInstance().branchTable.getItems().add(companyBranchTableModel1));
-                            companyBranchTableModel.add(companyBranchTableModel1);
+                            Platform.runLater(()-> DataAggregateController.getInstance().branchTable.getItems().add(companyBranchTableModel));
+                            companyBranchTableModels.add(companyBranchTableModel);
                         }
 
                     }
@@ -441,8 +444,123 @@ public class QiDianDataService {
         }
     }
 
+    /**
+     * 解析网站备案
+     * @param onecompId 公司id
+     */
+    private void parseCompanyBeian(String onecompId){
+        JSONObject companyDetailCardBody = getCompanyDetailCardBody(onecompId,siteID);
+        try {
+            StringBuilder pagesizeSB = new StringBuilder();
+            HttpClient45.post(BASEURL + companyDetailCard, headerMap, companyDetailCardBody, new SuccessListener() {
+                @Override
+                public void successListener(HttpEntity entity) throws IOException {
+                    String s = EntityUtils.toString(entity);
+                    JSONObject jsonObject = JSONObject.parseObject(s);
+                    JSONObject data = jsonObject.getJSONObject("data");
+                    if (null == data){
+                        return;
+                    }
+                    String total = data.get("total").toString();
+                    int page = (int)Math.floor(Double.parseDouble(total) / pageSize) + 1;
+                    pagesizeSB.append(page);
+                    Platform.runLater(()->DataAggregateController.getInstance().logBeianArea.appendText("[+]企典数据聚合: "+onecompId+"——1/"+page+"\n"));
+
+                    JSONArray rows = data.getJSONArray("rows");
+                    if (null == rows){
+                        return;
+                    }
+                    for (Object o : rows) {
+                        String homeUrl = "";
+                        String siteName = "";
+                        String domain = "";
+                        String checkDate = "";
+                        String number = "";
+                        try{
+                            if (o instanceof JSONArray){
+                                homeUrl= ((JSONArray) o).get(0) == null ? "" : ((JSONArray) o).get(0).toString();
+                                siteName= ((JSONArray) o).get(1) == null ? "" : ((JSONArray) o).get(1).toString();
+                                domain= ((JSONArray) o).get(2) == null ? "" : ((JSONArray) o).get(2).toString();
+                                checkDate= ((JSONArray) o).get(3) == null ? "" : ((JSONArray) o).get(3).toString();
+                                number= ((JSONArray) o).get(4) == null ? "" : ((JSONArray) o).get(4).toString();
+                            }
+                        }catch (Exception e){
+                            System.out.println("[-]解析网站备案: 数据类型转换失败");
+                        }
+
+                        //存储数据
+                        CompanyBeianTableModel companyBeianTableModel = new CompanyBeianTableModel(companyBranchId.incrementAndGet(), homeUrl, siteName, domain, checkDate, number ,onecompId);
+                        //更新数据表格
+                        Platform.runLater(()-> DataAggregateController.getInstance().beianTable.getItems().add(companyBeianTableModel));
+                        companyBeianTableModels.add(companyBeianTableModel);
+                    }
+
+                }
+            }, new FailedListener() {
+                @Override
+                public void failedListener(Exception e) {
+
+                }
+            });
+
+            int page = pagesizeSB.toString().isEmpty() ? 0 : Integer.parseInt(pagesizeSB.toString());
+            for (int i = 2; i <= page; i++) {
+                Thread.sleep(100);
+                companyDetailCardBody.put("pageNo",i);
+                Platform.runLater(()->DataAggregateController.getInstance().logBeianArea.appendText("[+]企典数据聚合: "+onecompId+"——"+companyDetailCardBody.get("pageNo")+"/"+page+"\n"));
+
+                HttpClient45.post(BASEURL + companyDetailCard, headerMap, companyDetailCardBody, new SuccessListener() {
+                    @Override
+                    public void successListener(HttpEntity entity) throws IOException {
+                        String s = EntityUtils.toString(entity);
+                        JSONObject jsonObject = JSONObject.parseObject(s);
+                        JSONObject data = jsonObject.getJSONObject("data");
+                        if (null == data){
+                            return;
+                        }
+                        JSONArray rows = data.getJSONArray("rows");
+                        if (null == rows){
+                            return;
+                        }
+                        for (Object o : rows) {
+                            String homeUrl = "";
+                            String siteName = "";
+                            String domain = "";
+                            String checkDate = "";
+                            String number = "";
+                            try{
+                                if (o instanceof JSONArray){
+                                    homeUrl= ((JSONArray) o).get(0) == null ? "" : ((JSONArray) o).get(0).toString();
+                                    siteName= ((JSONArray) o).get(1) == null ? "" : ((JSONArray) o).get(1).toString();
+                                    domain= ((JSONArray) o).get(2) == null ? "" : ((JSONArray) o).get(2).toString();
+                                    checkDate= ((JSONArray) o).get(3) == null ? "" : ((JSONArray) o).get(3).toString();
+                                    number= ((JSONArray) o).get(4) == null ? "" : ((JSONArray) o).get(4).toString();
+                                }
+                            }catch (Exception e){
+                                System.out.println("[-]解析网站备案: 数据类型转换失败");
+                            }
+
+                            //存储数据
+                            CompanyBeianTableModel companyBeianTableModel = new CompanyBeianTableModel(companyBranchId.incrementAndGet(), homeUrl, siteName, domain, checkDate, number ,onecompId);
+                            //更新数据表格
+                            Platform.runLater(()-> DataAggregateController.getInstance().beianTable.getItems().add(companyBeianTableModel));
+                            companyBeianTableModels.add(companyBeianTableModel);
+                        }
+
+                    }
+                }, new FailedListener() {
+                    @Override
+                    public void failedListener(Exception e) {
+
+                    }
+                });
+            }
 
 
+        }catch (Exception e){
+            System.out.println("解析网站备案异常");
+        }
+    }
 
     private JSONObject getCompanyDetailCardBatchBody(String onecomp_id){
         JSONObject params = new JSONObject();
@@ -481,7 +599,7 @@ public class QiDianDataService {
         return params;
     }
 
-    public Boolean stopCompany() {
+    public Boolean stop() {
         if (!future.isDone()) {
             executor.shutdownNow();
             return true;

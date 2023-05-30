@@ -14,6 +14,10 @@ public enum PurposeEnum {
     Info("Info", "", ""),
     TianYan("Info","天眼查","com.hello.info.service.TianYanService"),
     QiDian("Info","企典","com.hello.info.service.QiDianService"),
+
+    //辅助工具
+    IP2Domain("IP2Domain","",""),
+    Dnsgrep("IP2Domain","Dnsgrep","com.hello.assist.service.IP2DomainService"),
     ;
 
     private String expType;

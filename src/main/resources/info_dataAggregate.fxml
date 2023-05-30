@@ -11,7 +11,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
 <AnchorPane xmlns="http://javafx.com/javafx/8.0.202" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.hello.info.controller.DataAggregateController">
    <children>
       <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -19,7 +18,7 @@
             <HBox>
                <children>
                   <Button mnemonicParsing="false" onAction="#dataAggregate" text="一键聚合" />
-                  <Button mnemonicParsing="false" onAction="#dataAggregateStop" text="停止" >
+                  <Button mnemonicParsing="false" onAction="#dataAggregateStop" text="停止">
                       <HBox.margin>
                           <Insets right="10.0" />
                       </HBox.margin>
@@ -146,6 +145,47 @@
                               <VBox VBox.vgrow="ALWAYS">
                                  <children>
                                     <TextArea fx:id="logBranchArea" VBox.vgrow="ALWAYS">
+                                       <VBox.margin>
+                                          <Insets />
+                                       </VBox.margin>
+                                    </TextArea>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets bottom="20.0" left="20.0" right="20.0" />
+                                 </VBox.margin>
+                              </VBox>
+                           </children>
+                        </VBox>
+                     </content>
+                  </Tab>
+                  <Tab text="网站备案">
+                     <content>
+                        <VBox>
+                           <children>
+                              <VBox VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <TableView fx:id="beianTable">
+                                       <columns>
+                                          <TableColumn fx:id="beianID" text="序号" />
+                                          <TableColumn fx:id="beianHomeURL" text="网站地址" />
+                                          <TableColumn fx:id="beianSiteName" text="网站名称" />
+                                          <TableColumn fx:id="beianDomain" text="域名" />
+                                          <TableColumn fx:id="beianCheckDate" text="审核日期" />
+                                          <TableColumn fx:id="beianNumber" text="网站备案/许可证号" />
+                                          <TableColumn fx:id="beianCompanyID" text="企业ID" />
+                                       </columns>
+                                       <columnResizePolicy>
+                                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                       </columnResizePolicy>
+                                    </TableView>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                                 </VBox.margin>
+                              </VBox>
+                              <VBox VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <TextArea fx:id="logBeianArea" VBox.vgrow="ALWAYS">
                                        <VBox.margin>
                                           <Insets />
                                        </VBox.margin>

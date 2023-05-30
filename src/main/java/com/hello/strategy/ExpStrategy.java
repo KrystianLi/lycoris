@@ -1,5 +1,7 @@
 package com.hello.strategy;
 
+import org.apache.poi.ss.formula.functions.T;
+
 public abstract class ExpStrategy{
     public boolean isVul(){
         throw new UnsupportedOperationException();
@@ -44,5 +46,6 @@ public abstract class ExpStrategy{
 
     public String searchCompanyName(String keyWord){ throw new UnsupportedOperationException();}
     public String searchCompanyBeian(String keyWord){ throw new UnsupportedOperationException();}
-    public Boolean stopCompany(){ throw new UnsupportedOperationException();}
+    public Boolean stop(){ throw new UnsupportedOperationException();}
+    public void ip2domainSearch(String ipList){ throw new UnsupportedOperationException();}
 }

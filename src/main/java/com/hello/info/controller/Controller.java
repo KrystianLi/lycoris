@@ -124,6 +124,9 @@ public class Controller {
     private TableColumn<CompanyBeianTableModel, String> beianUrl;
     private ObservableList<CompanyBeianTableModel> companyBeianTableModels = FXCollections.observableArrayList();
 
+    @FXML
+    private TextField filterCompanyNameText;
+
     public void initialize(){
         //初始化公司查询数据获取源下拉框
         for (String s : PurposeEnum.getExpType(PurposeEnum.Info.getExpType())){
@@ -192,9 +195,9 @@ public class Controller {
         try {
             Boolean aBoolean = false;
             if (InfoName != null){
-                aBoolean = InfoName.stopCompany();
+                aBoolean = InfoName.stop();
             } else if (InfoBeian != null) {
-                aBoolean = InfoBeian.stopCompany();
+                aBoolean = InfoBeian.stop();
             }
             if (aBoolean){
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -270,5 +273,10 @@ public class Controller {
         stage.setScene(new Scene(root));
         stage.show();
         Controller.getInstance().getCompanyTable().getItems();
+    }
+
+    @FXML
+    void filterSearch(ActionEvent event){
+
     }
 }

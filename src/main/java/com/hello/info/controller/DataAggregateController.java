@@ -1,11 +1,11 @@
 package com.hello.info.controller;
 
-import com.hello.info.model.CompanyBranchTableModel;
-import com.hello.info.model.CompanyInvestTableModel;
-import com.hello.info.model.CompanyStockTableModel;
+import com.hello.info.model.aggregate.CompanyBeianTableModel;
+import com.hello.info.model.aggregate.CompanyBranchTableModel;
+import com.hello.info.model.aggregate.CompanyInvestTableModel;
+import com.hello.info.model.aggregate.CompanyStockTableModel;
 import com.hello.info.model.CompanyTableModel;
 import com.hello.info.service.aggregate.QiDianDataService;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -103,6 +103,34 @@ public class DataAggregateController {
 
     @FXML
     public TextArea logBranchArea;
+    @FXML
+    public TableView<CompanyBeianTableModel> beianTable;
+    private ObservableList<CompanyBeianTableModel> companyBeianTableModelObservableList = FXCollections.observableArrayList();
+
+
+    @FXML
+    private TableColumn<CompanyBeianTableModel, Integer> beianID;
+
+    @FXML
+    private TableColumn<CompanyBeianTableModel, String> beianHomeURL;
+
+    @FXML
+    private TableColumn<CompanyBeianTableModel, String> beianSiteName;
+
+    @FXML
+    private TableColumn<CompanyBeianTableModel, String> beianDomain;
+
+    @FXML
+    private TableColumn<CompanyBeianTableModel, String> beianCheckDate;
+
+    @FXML
+    private TableColumn<CompanyBeianTableModel, String> beianNumber;
+
+    @FXML
+    private TableColumn<CompanyBeianTableModel, String> beianCompanyID;
+
+    @FXML
+    public TextArea logBeianArea;
     ObservableList<CompanyTableModel> allCompanyModel;
     QiDianDataService qiDianDataService;
 
@@ -135,6 +163,16 @@ public class DataAggregateController {
         investmentProduct.setCellValueFactory(cellData -> cellData.getValue().investProductProperty());
         investmentCompanyID.setCellValueFactory(cellData -> cellData.getValue().companyIDProperty());
         investmentTable.setItems(companyInvestTableModelObservableList);
+
+
+        beianID.setCellValueFactory(cellData -> cellData.getValue().idProperty().asObject());
+        beianHomeURL.setCellValueFactory(cellData -> cellData.getValue().beianHomeURLProperty());
+        beianSiteName.setCellValueFactory(cellData -> cellData.getValue().beianSiteNameProperty());
+        beianDomain.setCellValueFactory(cellData -> cellData.getValue().beianDomainProperty());
+        beianCheckDate.setCellValueFactory(cellData -> cellData.getValue().beianCheckDateProperty());
+        beianNumber.setCellValueFactory(cellData -> cellData.getValue().beianNumberProperty());
+        beianCompanyID.setCellValueFactory(cellData -> cellData.getValue().companyIDProperty());
+        beianTable.setItems(companyBeianTableModelObservableList);
 
     }
 
@@ -172,7 +210,7 @@ public class DataAggregateController {
         try {
             Boolean aBoolean = false;
             if (qiDianDataService != null){
-                aBoolean = qiDianDataService.stopCompany();
+                aBoolean = qiDianDataService.stop();
             }
             if (aBoolean){
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);

@@ -168,7 +168,7 @@ public class QiDianService extends ExpStrategy {
     }
 
     @Override
-    public Boolean stopCompany() {
+    public Boolean stop() {
         if (!future.isDone()){
             executor.shutdownNow();
             return true;
